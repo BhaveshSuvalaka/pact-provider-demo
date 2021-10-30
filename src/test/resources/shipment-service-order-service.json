@@ -1,0 +1,103 @@
+{
+  "consumer": {
+    "name": "shipment-service"
+  },
+  "messages": [
+    {
+      "contents": {
+        "orderUuid": "e2490de5-5bd3-43d5-b7c4-526e33f71304",
+        "paidAmount": 100,
+        "products": [
+          "e2490de5-5bd3-43d5-b7c4-526e33f71304"
+        ],
+        "purchasedBy": "string",
+        "purchasedDate": "2000-01-31"
+      },
+      "description": "OrderReceivedEvent",
+      "generators": {
+        "body": {
+          "$.orderUuid": {
+            "type": "Uuid"
+          },
+          "$.paidAmount": {
+            "max": 2147483647,
+            "min": 0,
+            "type": "RandomInt"
+          },
+          "$.products[0]": {
+            "type": "Uuid"
+          },
+          "$.purchasedBy": {
+            "size": 20,
+            "type": "RandomString"
+          },
+          "$.purchasedDate": {
+            "format": "yyyy-MM-dd",
+            "type": "DateTime"
+          }
+        }
+      },
+      "matchingRules": {
+        "body": {
+          "$.orderUuid": {
+            "combine": "AND",
+            "matchers": [
+              {
+                "match": "regex",
+                "regex": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+              }
+            ]
+          },
+          "$.paidAmount": {
+            "combine": "AND",
+            "matchers": [
+              {
+                "match": "number"
+              }
+            ]
+          },
+          "$.products[0]": {
+            "combine": "AND",
+            "matchers": [
+              {
+                "match": "regex",
+                "regex": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+              }
+            ]
+          },
+          "$.purchasedBy": {
+            "combine": "AND",
+            "matchers": [
+              {
+                "match": "type"
+              }
+            ]
+          },
+          "$.purchasedDate": {
+            "combine": "AND",
+            "matchers": [
+              {
+                "match": "timestamp",
+                "timestamp": "yyyy-MM-dd"
+              }
+            ]
+          }
+        }
+      },
+      "metaData": {
+        "contentType": "application/json"
+      }
+    }
+  ],
+  "metadata": {
+    "pact-jvm": {
+      "version": "4.2.14"
+    },
+    "pactSpecification": {
+      "version": "3.0.0"
+    }
+  },
+  "provider": {
+    "name": "order-service"
+  }
+}
